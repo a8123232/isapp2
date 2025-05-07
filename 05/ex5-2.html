@@ -27,9 +27,9 @@
 
             document.getElementById('tf2').value = "";
         }
-        function button2Pressed() {
+        $().ready(function() {
             doSelect();
-        }
+        });
         function button3Pressed() {
             searchTweets();
         }
@@ -90,7 +90,6 @@
     <button onclick="button1Pressed()">tweet</button>
     <br>
     <p id="result"></p>
-    <button onclick="button2Pressed()">表示</button>
     <input type="text" id="searchInput" placeholder="キーワードを入力">
     <button onclick="button3Pressed()">検索</button>
     <hr>
