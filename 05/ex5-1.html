@@ -28,25 +28,38 @@
             var objects = await osql.connect(sql);
             console.log(objects);
             var html = '';
-            html = html + '<ul>';
+            html = html + '<table border="1">';
+            html = html + '<tr><th>ID</th><th>Name</th><th>Tweet</th><th>Time</th></tr>';
             for (var i = 0; i < objects.length; i++) {
             var object = objects[i];
-            html = html + '<li>' + object.name + ',' + object.tweet + ',' + object.time + '</li>';
+            html = html + '<tr>';
+            html = html + '<td>' + object.id + '</td>';
+            html = html + '<td>' + object.name + '</td>';
+            html = html + '<td>' + object.tweet + '</td>';
+            html = html + '<td>' + object.time + '</td>';
+            html = html + '</tr>';
             }
-            html = html + '</ul>';
+            html = html + '</table>';
             document.getElementById('result').innerHTML = html;
         }
+
         async function doSelect() {
-            var sql = 'select * from Tweets order by time desc limit 20';
+            var sql = 'select id, name, tweet, time from Tweets order by time desc limit 20';
             var objects = await osql.connect(sql);
             console.log(objects);
             var html = '';
-            html = html + '<ul>';
+            html = html + '<table border="1">';
+            html = html + '<tr><th>ID</th><th>Name</th><th>Tweet</th><th>Time</th></tr>';
             for (var i = 0; i < objects.length; i++) {
-                var object = objects[i];
-                html = html + '<li>' + object.name + ',' + object.tweet + ',' + object.time + '</li>';
+            var object = objects[i];
+            html = html + '<tr>';
+            html = html + '<td>' + object.id + '</td>';
+            html = html + '<td>' + object.name + '</td>';
+            html = html + '<td>' + object.tweet + '</td>';
+            html = html + '<td>' + object.time + '</td>';
+            html = html + '</tr>';
             }
-            html = html + '</ul>';
+            html = html + '</table>';
             document.getElementById('result').innerHTML = html;
         }
     </script>
