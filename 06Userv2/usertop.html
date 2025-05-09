@@ -10,6 +10,17 @@
 
     <script>
         osql.requireLogin();//すべてのページに入れる．google認証をして，osql.connect()や，osql.getMe()を使えるようにしてくれる．
+        $().ready(function () {
+            init();
+        });
+        function init() {
+            var userID = sessionStorage.getItem('userid');
+            var userName = sessionStorage.getItem('username');
+            console.log(userID);
+            console.log(userName);
+            document.getElementById('welcome').innerHTML = "ようこそ" + userName + "さん"
+        }
+
     </script>
 
 </head>
