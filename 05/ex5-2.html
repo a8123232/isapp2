@@ -11,6 +11,8 @@
     <script>
         osql.requireLogin();//すべてのページに入れる．google認証をして，osql.connect()や，osql.getMe()を使えるようにしてくれる．
         var x;
+        var searchMode = false; // ← 追加：検索中かどうかを判定
+
         $().ready(function() {
             x = 0;
             setInterval(doCount, 2000);
@@ -30,11 +32,14 @@
             document.getElementById('result').innerHTML = "tweetしました";
 
             document.getElementById('tf2').value = "";
+            searchMode = false; // ← 投稿後は通常モードに戻す
+            doSelect();         // ← 最新表示を更新
         }
         $().ready(function() {
             doSelect();
         });
         function button3Pressed() {
+            searchMode = true; // ← 検索モードに変更
             searchTweets();
         }
 
@@ -83,7 +88,10 @@
             document.getElementById('result2').innerHTML = html;
         }
         async function doCount() {
-            await doSelect();
+            if (!searchMode) {
+                await doSelect(); // 通常モード時のみ更新
+                }
+        
         }
 　　</script>
 </head>
