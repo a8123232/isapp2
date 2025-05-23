@@ -16,7 +16,7 @@
         });
 
         function button1Pressed() {
-            var userid = document.getElementById('tf1').value;
+            var userid = event.target.closest('tr').children[0].textContent;
             var sql = `delete from Users where id="${userid}";`;
             osql.connect(sql).then(function (result) {
                 console.log(result);
@@ -37,6 +37,7 @@
                 html = html + '<td>' + object.id + '</td>';
                 html = html + '<td>' + object.name + '</td>';
                 html = html + '<td>' + '<a href="update.html?userid=' + object.id + '">変更</a>' + '</td>';
+                html = html + '<td><button onclick="button1Pressed()">削除</button></td>';
                 html = html + '</tr>';
             }
             html = html + '</table>';
@@ -48,7 +49,6 @@
 
 <body>
     <h1>Users</h1>
-    ID:<input id="tf1" value="" type="textfield"><button onclick="button1Pressed()">削除</button>
     <br>
     <p id="result">xxxx</p>
 </body>
