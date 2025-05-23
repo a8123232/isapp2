@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script type="text/javascript" src="../lib/jquery.min.js"></script>
+    <script type="text/javascript" src="../lib/osql.js"></script>
+
+    <script>
+        osql.requireLogin();//すべてのページに入れる．google認証をして，osql.connect()や，osql.getMe()を使えるようにしてくれる．
+        var x;
+        var searchMode = false; // ← 追加：検索中かどうかを判定
+
+        $().ready(function() {
+            x = 0;
+            setInterval(doCount, 2000);
+            var username = sessionStorage.getItem('username');
+            if (username) {
+                document.getElementById('tf1').value = username;
+            } else {
+                document.getElementById('tf1').value = "名無し";
+            }
+        });
+        function button1Pressed() {
+            doInsert();
+        }
+
+        async function doInsert() {
+            var userid = document.getElementById('tf1').value;
+            var tweet = document.getElementById('tf2').value;
+
+            var sql = `insert into Tweets (name, tweet, time) values("${userid}", "${tweet}", now());`;
+            var objects = await osql.connect(sql);
+            console.log(objects);
+
+            document.getElementById('result').innerHTML = "tweetしました";
+
+            document.getElementById('tf2').value = "";
+            searchMode = false; // ← 投稿後は通常モードに戻す
+            doSelect();         // ← 最新表示を更新
+        }
+        $().ready(function() {
+            doSelect();
+        });
+        function button3Pressed() {
+            searchMode = true; // ← 検索モードに変更
+            searchTweets();
+        }
+
+        function searchTweets() {
+            var keyword = document.getElementById('searchInput').value;
+            doSearch(keyword);
+        }
+
+        async function doSearch(keyword) {
+            var sql = `select * from Tweets where tweet LIKE '%${keyword}%' order by time desc limit 20`;
+            var objects = await osql.connect(sql);
+            console.log(objects);
+            var html = '';
+            html = html + '<table border="1">';
+            html = html + '<tr><th>ID</th><th>Name</th><th>Tweet</th><th>Time</th></tr>';
+            for (var i = 0; i < objects.length; i++) {
+            var object = objects[i];
+            html = html + '<tr>';
+            html = html + '<td>' + object.id + '</td>';
+            html = html + '<td>' + object.name + '</td>';
+            html = html + '<td>' + object.tweet + '</td>';
+            html = html + '<td>' + object.time + '</td>';
+            html = html + '</tr>';
+            }
+            html = html + '</table>';
+            document.getElementById('result2').innerHTML = html;
+        }
+
+        async function doSelect() {
+            var sql = 'select id, name, tweet, time from Tweets order by time desc limit 20';
+            var objects = await osql.connect(sql);
+            console.log(objects);
+            var html = '';
+            html = html + '<table border="1">';
+            html = html + '<tr><th>ID</th><th>Name</th><th>Tweet</th><th>Time</th></tr>';
+            for (var i = 0; i < objects.length; i++) {
+            var object = objects[i];
+            html = html + '<tr>';
+            html = html + '<td>' + object.id + '</td>';
+            html = html + '<td>' + object.name + '</td>';
+            html = html + '<td>' + object.tweet + '</td>';
+            html = html + '<td>' + object.time + '</td>';
+            html = html + '</tr>';
+            }
+            html = html + '</table>';
+            document.getElementById('result2').innerHTML = html;
+        }
+        async function doCount() {
+            if (!searchMode) {
+                await doSelect(); // 通常モード時のみ更新
+                }
+        
+        }
+　　</script>
+</head>
+
+<body>
+    <h1>Tweets</h1>
+    <br>
+    名前:<input id="tf1" type="text" readonly>
+    <br>
+    tweet:<input id="tf2" type="textfield">
+    <button onclick="button1Pressed()">tweet</button>
+    <br>
+    <p id="result"></p>
+    <input type="text" id="searchInput" placeholder="キーワードを入力">
+    <button onclick="button3Pressed()">検索</button>
+    <hr>
+    <p id="result2">xxxx</p>
+</body>
+
+</html>
