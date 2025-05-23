@@ -16,8 +16,14 @@
         });
 
         function button1Pressed() {
-            var userid = event.target.closest('tr').children[0].textContent;
-            var sql = `delete from Users where id="${userid}";`;
+            var ans = window.confirm('本当に削除しますか？');
+            if (ans == true) {
+                var userid = event.target.closest('tr').children[0].textContent;
+                var sql = `delete from Users where id="${userid}";`;
+            } else {
+                console.log('キャンセルされました');
+            }
+            
             osql.connect(sql).then(function (result) {
                 console.log(result);
                 execSelect();
